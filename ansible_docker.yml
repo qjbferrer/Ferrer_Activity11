@@ -1,0 +1,25 @@
+---
+- name: Deploy Docker containers
+  hosts: localhost
+  become: yes
+  tasks:
+    - name: Install Docker in Ubuntu and CentOS
+      apt:
+        name: docker.io
+        state: present
+
+    - name: Build and run web container
+      command: docker build -t web_server .
+      args:
+        chdir: /home/josephferrer/Ferrer_Activity11
+
+    - name: Run web container
+      command: docker run -d -p 80:80 web_server
+
+    - name: Build and run DB container
+      command: docker build -t db_server .
+      args:
+        chdir: /home/josephferrer/Ferrer_Activity11
+
+    - name: Run DB container
+      command: docker run -d -p 3306:3306 --name db_container -e MYSQL_ROOT_PASSWORD=root -e MYSQL_DATABASE=mydatabase -e MYSQL_USER=myuser -e MYSQL_PASSWORD=mypassword db_server
